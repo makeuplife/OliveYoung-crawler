@@ -39,8 +39,25 @@ function getOliveYoungAll () {
                     console.error(err)
                     reject(err)
                 }
-                console.log('getOliveYoungAll done: ' + oliveYoung)
+                // console.log('getOliveYoungAll done: ' + oliveYoung)
                 resolve(oliveYoung)
+            }
+        )
+    })
+}
+
+function getProductCodeList () {
+    return new Promise((resolve, reject) => {
+        OliveYoung.find(
+            {},
+            function(err, oliveYoung) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                let product_ref_code_list = oliveYoung.product_ref_code;
+                console.log('getProductCodeList done: ' + product_ref_code_list)
+                resolve(product_ref_code_list)
             }
         )
     })
@@ -147,6 +164,24 @@ function updateOliveYoungById(oliveYoungId, body) {
     })
 }
 
+function updateOliveYoungByCode(product) {
+    return new Promise((resolve, reject) => {
+        OliveYoung.findOneAndUpdate(
+            {"product_ref_code": product.product_ref_code
+            },
+            {$set: product
+            },
+            {upsert: false, new: true},
+            function(err, data) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(data)
+            })
+    })
+}
+
 function updateOliveYoungHistoryId(oliveYoungId, historyId) {
     return new Promise((resolve, reject) => {
 
@@ -187,11 +222,13 @@ function deleteOliveYoungById (id) {
 exports.insertBulk = insertBulk;
 exports.createOliveYoung = createOliveYoung;
 exports.getOliveYoungAll = getOliveYoungAll;
+exports.getProductCodeList = getProductCodeList;
 exports.getOliveYoungByName = getOliveYoungByName;
 exports.getByRegexOliveYoungName = getByRegexOliveYoungName;
 exports.getOliveYoungById = getOliveYoungById;
 exports.getOliveYoungByIdAndPassword = getOliveYoungByIdAndPassword;
 exports.getOliveYoungByEmail = getOliveYoungByEmail;
 exports.updateOliveYoungById = updateOliveYoungById;
+exports.updateOliveYoungByCode = updateOliveYoungByCode;
 exports.updateOliveYoungHistoryId = updateOliveYoungHistoryId;
 exports.deleteOliveYoungById = deleteOliveYoungById;
